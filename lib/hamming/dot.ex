@@ -1,21 +1,15 @@
 defmodule Hamming.Dot do
-  defp edge(x, y) do
-    "#{x} -- #{y};"
-  end
-
-  def edges_to_dot(edges) do
-    edges
-      |> Enum.sort
-      |> Enum.map(fn {x, y} -> edge(x, y) <> "\n" end)
+  defp edge_to_dot({p, q}) do
+    "#{p} -- #{q};\n"
   end
 
   @spec hamming_cube_edges(pos_integer) :: list
-  def hamming_cube_edges(dimension \\ 4) do
-    max_num = BitMath.pow_2(dimension) - 1
+  def hamming_cube_edges(dimensions \\ 4) do
+    max_num = BitMath.pow_2(dimensions) - 1
 
-    (for i <- 0..max_num,
-         j <- BitMath.hamming_shell(i, 1, dimension) do
-      {min(i, j), max(i, j)}
+    (for p <- 0..max_num,
+         q <- BitMath.hamming_shell(p, 1, dimensions) do
+      {min(p, q), max(p, q)}
     end) |> Enum.uniq
   end
 
@@ -30,7 +24,8 @@ defmodule Hamming.Dot do
     end) |> Enum.uniq
   end
 
-  def print_hamming_sphere_graph do
+  @spec print_graph([integer], [{integer, integer}]) :: String.t
+  def print_graph(nodes, edges) do
     IO.puts """
     graph G {"
       node [colorscheme=oranges6];
@@ -38,15 +33,32 @@ defmodule Hamming.Dot do
 
     """
 
-    for node <- (BitMath.hamming_sphere(0, 4, 8) |> Enum.sort) do
+    for node <- (nodes |> Enum.sort) do
       color = BitMath.hamming_distance(0, node) + 1
       IO.puts("  #{node} [style=filled fillcolor=#{color}];")
     end
 
-    Hamming.Dot.hamming_sphere_edges(0, 4, 8)
-      |> Hamming.Dot.edges_to_dot
+    edges
+      |> Enum.sort
+      |> Enum.map(&(edge_to_dot &1))
       |> IO.puts
     IO.puts "}"
+  end
+
+  @spec print_hamming_sphere_graph(integer, pos_integer, pos_integer) :: String.t
+  def print_hamming_sphere_graph(center, radius, dimensions) do
+    nodes = BitMath.hamming_sphere(center, radius, dimensions)
+    edges = hamming_sphere_edges(center, radius, dimensions)
+
+    print_graph(nodes, edges)
+  end
+
+  @spec print_hamming_cube_graph(pos_integer) :: String.t
+  def print_hamming_cube_graph(dimensions) do
+    nodes = BitMath.hamming_cube(dimensions)
+    edges = hamming_cube_edges(center, radius, dimensions)
+
+    print_graph(nodes, edges)
   end
 end
 
