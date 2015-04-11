@@ -43,8 +43,8 @@ defmodule Hamming.Dot do
       IO.puts("  #{node} [style=filled fillcolor=#{color}];")
     end
 
-    Dot.hamming_sphere_edges(0, 4, 8)
-      |> Dot.edges_to_dot
+    Hamming.Dot.hamming_sphere_edges(0, 4, 8)
+      |> Hamming.Dot.edges_to_dot
       |> IO.puts
     IO.puts "}"
   end
