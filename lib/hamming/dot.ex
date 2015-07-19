@@ -7,7 +7,7 @@ defmodule Hamming.Dot do
 
   @spec hamming_cube_edges(pos_integer) :: list
   def hamming_cube_edges(dimensions \\ 4) do
-    max_num = Binary.pow_2(dimensions) - 1
+    max_num = Binary.pow2(dimensions) - 1
 
     (for p <- 0..max_num,
          q <- Binary.hamming_shell(p, 1, dimensions) do

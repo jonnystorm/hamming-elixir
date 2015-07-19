@@ -15,6 +15,6 @@ defmodule HammingEx.Mixfile do
   end
 
   defp deps do
-    [{:jds_math_ex, git: "https://github.com/jonnystorm/jds-math-elixir", ref: "b3f83400c"}]
+    [{:jds_math_ex, git: "https://github.com/jonnystorm/jds-math-elixir"}]
   end
 end
